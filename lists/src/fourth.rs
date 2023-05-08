@@ -157,25 +157,6 @@ impl<T> DoubleEndedIterator for IntoIter<T> {
     }
 }
 
-impl<'a, T> Iterator for Iter<'a, T> {
-    type Item = Ref<'a, T>;
-    fn next(&mut self) -> Option<Self::Item> {
-        self.0.take().map(|node_ref| {
-            let (next, elem) = Ref::map_split(node_ref, |node| (&node.next, &node.elem));
-
-            self.0 = if next.is_some() {
-                Some(Ref::map(next, |next| {
-                    let temp = &**next.as_ref().unwrap();
-                }))
-            } else {
-                None
-            };
-
-            elem
-        })
-    }
-}
-
 impl<T> Drop for List<T> {
     fn drop(&mut self) {
         // keep taking the head
